@@ -19,6 +19,23 @@ console.log(\`!! Hi!\`);
 `);
 ```
 
+!! Dynamic WikiText Demo
+
+```js
+const ramdomID = Math.random().toString(36).slice(2);
+const text = `<fieldset>
+	<legend>Quick Add</legend>
+
+	<$button>
+		<$action-sendmessage $message="tm-new-tiddler" title=<<now "YYYY-MM-DD">> tags="${ramdomID}" />
+    Add New Tiddler with ID ${ramdomID}
+	</$button>
+
+</fieldset>`
+
+console.log(text)
+```
+
 !! Wiki Scripting Demo
 
 ```js
