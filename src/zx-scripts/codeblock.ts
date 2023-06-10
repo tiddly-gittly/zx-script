@@ -1,5 +1,6 @@
 const BaseCodeBlockWidget = require('$:/core/modules/widgets/codeblock.js').codeblock;
 
+const ZX_SCRIPT_OUTPUT_ID = 'zx-script-output-id';
 // Hijack core codeblock widget render()
 BaseCodeBlockWidget.prototype.render = function(parent: Element, nextSibling: Element | null) {
   this.parentDomNode = parent;
@@ -59,6 +60,7 @@ BaseCodeBlockWidget.prototype.render = function(parent: Element, nextSibling: El
       $tw.utils.addClass(outputElement, 'js');
       $tw.utils.addClass(outputElement, 'javascript');
       let prevText = '';
+      const outputID = Math.random().toString(36).slice(2);
       window.observables.native
         .executeZxScript$({
           fileContent,
@@ -69,8 +71,16 @@ BaseCodeBlockWidget.prototype.render = function(parent: Element, nextSibling: El
           prevText = fullText;
           // try render output as wikitext, so literal program or programmatically visualization is possible
           try {
-            const renderedHTML = $tw.wiki.renderText('text/html', 'text/vnd.tiddlywiki', fullText);
-            outputElement.innerHTML = renderedHTML;
+            // clear previous output widget
+            this.children = this.children.filter((child) => child.getVariable(ZX_SCRIPT_OUTPUT_ID, { allowSelfAssigned: true }) !== outputID);
+            // clear content manually, otherwise it will append new content to the end
+            outputElement.innerText = '';
+            // create a new output widget
+            const astNode = $tw.wiki.parseText('text/vnd.tiddlywiki', fullText).tree;
+            const newWidgetNode = this.makeChildWidget({ type: 'tiddler', children: astNode });
+            newWidgetNode.setVariable(ZX_SCRIPT_OUTPUT_ID, outputID);
+            newWidgetNode.render(outputElement, null);
+            this.children.push(newWidgetNode);
           } catch (error) {
             console.error(error);
             outputElement.innerText = fullText;
