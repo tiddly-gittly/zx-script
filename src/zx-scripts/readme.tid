@@ -10,15 +10,15 @@ This tiddlywiki plugin enables you to run any tiddler with zx.
 
 !! Basic Usage
 
+!!! Prerequisit
+
+This plugin requires [TidGi](https://github.com/tiddly-gittly/TidGi-Desktop) Desktop App environment to function properly. It will send tiddler content to the `zx` inside TidGi, and prints the output.
+
 !!! Tiddler Type
 
 Tiddler with title extension `*.js *.md *.mjs` can be execute without problem. Other tiddler witout extension (no `.xxx`) will be executed as `*.md` file, for example, tid file without extions will be executed as `*.md`, but it works without problem too, even you are writing wiki text instead of markdown.
 
 If you add filetype `application/javascript` to your tiddler, it will be recognized as `*.mjs`.
-
-!!! Prerequisit
-
-This plugin requires [TiddlyGit](https://github.com/tiddly-gittly/TiddlyGit-Desktop) environment to function properly. It will send tiddler content to the `zx` inside TiddlyGit, and prints the output.
 
 !!! Button
 

@@ -24,8 +24,8 @@ console.log(\`!! Hi!\`);
 ```js
 const exampleTitle = '$:/plugins/linonetwo/zx-script/style.css';
 
-// write a console.log that is start with this separator ↓
-console.log(`/** tw */
+// to write script execute in tiddlywiki context, start with this separator ↓
+/** tw */
 // You can use $tw.wiki.getTiddler to get tiddler data, don't forget to wrap variable with ' '
 const tiddlerData = $tw.wiki.getTiddler('${exampleTitle}');
 // This script runs in the nodejs side, and you can't access some API from nodejs ↓ it will cause error
@@ -38,10 +38,34 @@ const tiddlerData = $tw.wiki.getTiddler('${exampleTitle}');
 
 // You can use console to print some data
 console.log(tiddlerData.fields.type);
-// You can return some data in the last line, it will be logged out to you.
-JSON.stringify(tiddlerData);
+// You can assign some data to a variable, it can be used in next context
+const tiddlerDataString = JSON.stringify(tiddlerData);
 
-// ↓ Don't forget to end the block with separator!
+// ↓ If you end the block with separator, you can write script execute in zx environment again
 /** tw */
-`);
+console.log(`## Hi!`);
+console.log(tiddlerDataString);
+```
+
+!!! DB and execution
+
+Start from v0.8.0-prerelease11 of [TidGi](https://github.com/tiddly-gittly/TidGi-Desktop/releases), it has a [better-sqlite3](https://github.com/WiseLibs/better-sqlite3/blob/master/docs/api.md) instance at `$tw.utils.Sqlite`. Which is accessible for server side plugin (TidGi is a launcher for nodejs wiki, so can run server side plugins) or zx script.
+
+```js
+// pure nodejs context
+console.log(`## Hi!`);
+let aaa = 3;
+
+/** tw */
+
+// now in worker_thread with $tw wiki access
+
+let filterExample = $tw.wiki.filterOperators.sum((callback) => {callback({}, String(aaa));callback({}, String(aaa))})
+console.log(filterExample)
+
+// use Sqlite
+const db = $tw.utils.Sqlite
+const stmt = db.prepare('SELECT title, text FROM tiddlers');
+const result = stmt.pluck().all()
+console.log(result)
 ```
