@@ -13,7 +13,7 @@ BaseCodeBlockWidget.prototype.render = function(parent: Element, nextSibling: El
   const language = this.getAttribute('language');
   const outputElement = this.document.createElement('article');
   outputElement.style.display = 'none';
-  outputElement.className = 'zx-script-output';
+  $tw.utils.addClass(outputElement, 'zx-script-output');
   if (['md', 'js', 'javascript', 'ts', 'typescript', 'bash', 'shell', 'sh', 'zsh'].includes(language)) {
     const executeButtonElement = this.document.createElement('button');
     executeButtonElement.innerText = 'ZX';
@@ -58,14 +58,15 @@ BaseCodeBlockWidget.prototype.render = function(parent: Element, nextSibling: El
       $tw.utils.addClass(outputElement, 'hljs');
       $tw.utils.addClass(outputElement, 'js');
       $tw.utils.addClass(outputElement, 'javascript');
+      let prevText = '';
       window.observables.native
         .executeZxScript$({
           fileContent,
           fileName,
         })
         .subscribe((output) => {
-          const prevText = outputElement.innerText;
-          const fullText = `${prevText}${prevText ? '\n' : ''}${output ?? ''}`;
+          const fullText = `${prevText}${prevText ? '\n\n' : ''}${output ?? ''}`;
+          prevText = fullText;
           // try render output as wikitext, so literal program or programmatically visualization is possible
           try {
             const renderedHTML = $tw.wiki.renderText('text/html', 'text/vnd.tiddlywiki', fullText);
@@ -83,6 +84,7 @@ BaseCodeBlockWidget.prototype.render = function(parent: Element, nextSibling: El
   parent.insertBefore(preElement, nextSibling);
   parent.insertBefore(outputElement, nextSibling);
   this.domNodes.push(preElement);
+  this.domNodes.push(outputElement);
   if (this.postRender) {
     this.postRender();
   }
