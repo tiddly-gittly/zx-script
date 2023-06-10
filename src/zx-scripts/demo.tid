@@ -26,14 +26,14 @@ const exampleTitle = '$:/plugins/linonetwo/zx-script/style.css';
 
 // to write script execute in tiddlywiki context, start with this separator ↓
 /** tw */
-// You can use $tw.wiki.getTiddler to get tiddler data, don't forget to wrap variable with ' '
-const tiddlerData = $tw.wiki.getTiddler('${exampleTitle}');
+// You can use $tw.wiki.getTiddler to get tiddler data, and can use some variables from previous context
+const tiddlerData = $tw.wiki.getTiddler(exampleTitle);
 // This script runs in the nodejs side, and you can't access some API from nodejs ↓ it will cause error
 // $tw.notifier.display('$:/state/notification/asdf');
 
 // You can even add tiddler using the API! But this will be add to the nodejs side, it will take a while to wait it sync to the browser side.
 // $tw.syncadaptor.wiki.addTiddler({ title: 'asdf', text: 'aaa bbb' });
-// You can't add state tiddler this way, they won't get sync to the browser.
+// You can't add state tiddler this way, they won't get sync to the browser. (nodejs wiki limitation)
 // $tw.syncadaptor.wiki.addTiddler({ title: '$:/state/notification/asdf', text: 'aaa bbb' });
 
 // You can use console to print some data
@@ -43,7 +43,7 @@ const tiddlerDataString = JSON.stringify(tiddlerData);
 
 // ↓ If you end the block with separator, you can write script execute in zx environment again
 /** tw */
-console.log(`## Hi!`);
+console.log(`\n!! Hi!\n`);
 console.log(tiddlerDataString);
 ```
 

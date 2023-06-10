@@ -11,8 +11,9 @@ BaseCodeBlockWidget.prototype.render = function(parent: Element, nextSibling: El
   preElement.appendChild(codeElement);
 
   const language = this.getAttribute('language');
-  const outputElement = this.document.createElement('pre');
+  const outputElement = this.document.createElement('article');
   outputElement.style.display = 'none';
+  outputElement.className = 'zx-script-output';
   if (['md', 'js', 'javascript', 'ts', 'typescript', 'bash', 'shell', 'sh', 'zsh'].includes(language)) {
     const executeButtonElement = this.document.createElement('button');
     executeButtonElement.innerText = 'ZX';
@@ -64,7 +65,15 @@ BaseCodeBlockWidget.prototype.render = function(parent: Element, nextSibling: El
         })
         .subscribe((output) => {
           const prevText = outputElement.innerText;
-          outputElement.innerText = `${prevText}${prevText ? '\n' : ''}${output ?? ''}`;
+          const fullText = `${prevText}${prevText ? '\n' : ''}${output ?? ''}`;
+          // try render output as wikitext, so literal program or programmatically visualization is possible
+          try {
+            const renderedHTML = $tw.wiki.renderText('text/html', 'text/vnd.tiddlywiki', fullText);
+            outputElement.innerHTML = renderedHTML;
+          } catch (error) {
+            console.error(error);
+            outputElement.innerText = fullText;
+          }
         });
     });
 

@@ -9,5 +9,5 @@
   "dependents": [
     "$:/plugins/linonetwo/itonnote"
   ],
-  "list": "readme developer demo"
+  "list": "readme demo developer"
 }

@@ -14,3 +14,8 @@
 .code-block-zx-script-execution-button:active {
   opacity: 1;
 }
+
+article.zx-script-output {
+  display: flex;
+  flex-direction: column;
+}
