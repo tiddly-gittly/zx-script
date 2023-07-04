@@ -3,13 +3,13 @@
   "license": "MIT",
   "version": "0.0.2",
   "scripts": {
+    "dev": "tiddlywiki-plugin-dev dev",
+    "build": "npm run clean && tiddlywiki-plugin-dev build",
     "reset": "rimraf ./**/node_modules",
     "clean": "rimraf dist",
     "prepare": "husky install",
     "update": "npm-check-updates -u",
     "new": "tiddlywiki-plugin-dev new",
-    "dev": "tiddlywiki-plugin-dev dev",
-    "build": "npm run clean && tiddlywiki-plugin-dev build",
     "build:library": "npm run clean && tiddlywiki-plugin-dev build --library --output dist/library",
     "publish": "npm run clean && tiddlywiki-plugin-dev publish",
     "publish:offline": "npm run clean && tiddlywiki-plugin-dev publish --offline"
@@ -31,11 +31,10 @@
     ]
   },
   "devDependencies": {
-    "@modern-js/eslint-config": "^2.22.1",
     "@modern-js/tsconfig": "^2.22.1",
     "@types/node": "^20.2.5",
     "dprint": "^0.37.1",
-    "eslint-plugin-dprint-integration": "^0.3.0",
+    "eslint-config-tidgi": "1.1.1",
     "husky": "^8.0.3",
     "lint-staged": "^13.2.2",
     "rimraf": "^5.0.1",

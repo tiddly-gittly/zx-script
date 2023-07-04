@@ -1,5 +1,6 @@
 import { widget as Widget } from '$:/core/modules/widgets/widget.js';
 import type { IParseTreeNode, IWidgetInitialiseOptions } from 'tiddlywiki';
+import { execute } from './execute';
 
 class ZXExecuteButtonWidget extends Widget {
   /**
@@ -43,54 +44,25 @@ class ZXExecuteButtonWidget extends Widget {
       return;
     }
     const type = this.getAttribute('type') || 'text/vnd.tiddlywiki';
-    const stateTiddlerTitle = `$:/state/linonetwo/zx-script/output/${title}`;
-    let fileName = title.replace(/[/$:]/g, '-');
     const fileContent = this.getAttribute('content', '');
-    // add mjs or md to the end
-    if (
-      !fileName.endsWith('.mjs') &&
-      !fileName.endsWith('.js') &&
-      !fileName.endsWith('.md')
-    ) {
-      switch (type) {
-        // try fit everything that may have ```js block into md
-        case 'text/vnd.tiddlywiki':
-        case 'text/plain':
-        case 'text/markdown':
-        case 'text/x-markdown':
-        case 'text/html': {
-          fileName += '.md';
-          break;
-        }
-        case 'application/javascript':
-        default: {
-          fileName += '.mjs';
-          break;
-        }
-      }
-    }
-
-    $tw.wiki.setText(stateTiddlerTitle, 'text', undefined, '');
-    window.observables.native
-      .executeZxScript$({
-        fileContent,
-        fileName,
-      })
-      .subscribe(output => {
-        const prevText = $tw.wiki.getTiddlerText(stateTiddlerTitle);
-        $tw.wiki.setText(
-          stateTiddlerTitle,
-          'text',
-          undefined,
-          `${prevText ?? ''}\n${output ?? ''}`,
-        );
-        $tw.wiki.setText(
-          stateTiddlerTitle,
-          'type',
-          undefined,
-          'text/vnd.tiddlywiki',
-        );
-      });
+    const stateTiddlerTitle = `$:/state/linonetwo/zx-script/output/${title}`;
+    execute(title, fileContent, type, () => {
+      $tw.wiki.setText(stateTiddlerTitle, 'text', undefined, '');
+    }, output => {
+      const prevText = $tw.wiki.getTiddlerText(stateTiddlerTitle);
+      $tw.wiki.setText(
+        stateTiddlerTitle,
+        'text',
+        undefined,
+        `${prevText ?? ''}\n${output ?? ''}`,
+      );
+      $tw.wiki.setText(
+        stateTiddlerTitle,
+        'type',
+        undefined,
+        'text/vnd.tiddlywiki',
+      );
+    });
   }
 }
 

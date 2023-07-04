@@ -7,4 +7,6 @@ short-caption: zx script executor
 description: Run tiddler as ZX Script
 
 \whitespace trim
-<$execute-zx-script content={{!!text}} title={{!!title}} type={{!!type}} />
+<$list filter="[all[current]field:type[application/javascript]] :else[all[current]search:text[```]]">
+  <$execute-zx-script content={{!!text}} title={{!!title}} type={{!!type}} />
+</$list>
