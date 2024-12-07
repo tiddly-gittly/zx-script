@@ -1,0 +1,10 @@
+title: $:/plugins/linonetwo/zx-script/DecorateCoreCodeblockWidget
+tags: $:/tags/Global/View/Body
+
+\widget $codeblock(code)
+<$genesis $type="$codeblock" $remappable="no" code=<<code>> />
+<$button class="code-block-zx-script-execution-button">
+  ZX
+  <$action-sendmessage $message="tm-zx" title={{!!title}} field="text"/>
+</$button>
+\end

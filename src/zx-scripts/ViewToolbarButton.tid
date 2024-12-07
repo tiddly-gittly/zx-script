@@ -7,8 +7,18 @@ short-caption: zx script executor
 description: Run tiddler as ZX Script
 
 \whitespace trim
-<$list filter="[all[current]!has[plugin-type]]">
-<$list filter="[all[current]field:type[application/javascript]] :else[all[current]search:text[```]]">
-  <$execute-zx-script content={{!!text}} title={{!!title}} type={{!!type}} />
-</$list>
-</$list>
+<%if [all[current]!has[plugin-type]] %>
+  <%if [all[current]field:type[application/javascript]] :else[all[current]search:text[```]] %>
+    <$button>
+      <$action-sendmessage $message="tm-zx" title={{!!title}} field="text"/>
+      <%if [<tv-config-toolbar-icons>match[yes]] %>
+        {{$:/plugins/linonetwo/zx-script/zx-icon}}
+      <%endif%>
+      <%if [<tv-config-toolbar-text>match[yes]] %>
+        <span class="tc-btn-text">
+          {{$:/plugins/linonetwo/zx-script/zx-button-caption}}
+        </span>
+      <%endif%>
+    </$button>
+  <%endif%>
+<%endif%>

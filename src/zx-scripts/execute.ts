@@ -1,7 +1,9 @@
+/* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable no-param-reassign */
 export function execute(title: string, fileContent: string, type = 'text/vnd.tiddlywiki', onStart: () => void, onOutput: (output: string) => void) {
   if (!('observables' in window)) return;
-  let fileName = title.replace(/[/$:]/g, '-');
+  let fileName = title.replaceAll(/[$/:]/g, '-');
   // add mjs or md to the end
   if (
     !fileName.endsWith('.mjs') &&
@@ -30,7 +32,7 @@ export function execute(title: string, fileContent: string, type = 'text/vnd.tid
         fileName += '.ts';
         break;
       }
-      case 'application/javascript':
+      // case 'application/javascript':
       default: {
         fileName += '.mjs';
         break;
@@ -45,4 +47,56 @@ export function execute(title: string, fileContent: string, type = 'text/vnd.tid
       fileName,
     })
     .subscribe(onOutput);
+}
+
+export function executeOnTiddler(title: string, field: string = 'text') {
+  if (!title) {
+    return;
+  }
+  const tiddler = $tw.wiki.getTiddler(title);
+  const type = tiddler?.fields.type || 'text/vnd.tiddlywiki';
+  const fileContent = tiddler?.fields[field] as string || '';
+  const stateTiddlerTitle = `$:/state/linonetwo/zx-script/output/${title}`;
+  execute(title, fileContent, type, () => {
+    $tw.wiki.setText(stateTiddlerTitle, 'text', undefined, '');
+  }, output => {
+    const previousText = $tw.wiki.getTiddlerText(stateTiddlerTitle);
+    $tw.wiki.setText(
+      stateTiddlerTitle,
+      'text',
+      undefined,
+      `${previousText ?? ''}\n${output ?? ''}`,
+    );
+    $tw.wiki.setText(
+      stateTiddlerTitle,
+      'type',
+      undefined,
+      'text/vnd.tiddlywiki',
+    );
+  });
+}
+
+export function executeOnAnyContent(id: string, content: string, contentType: string = 'application/javascript') {
+  if (!id) {
+    return;
+  }
+  const stateTiddlerTitle = `$:/state/linonetwo/zx-script/output/${id}`;
+  const title = `zx-tmp-${id}`;
+  execute(title, content, contentType, () => {
+    $tw.wiki.setText(stateTiddlerTitle, 'text', undefined, '');
+  }, output => {
+    const previousText = $tw.wiki.getTiddlerText(stateTiddlerTitle);
+    $tw.wiki.setText(
+      stateTiddlerTitle,
+      'text',
+      undefined,
+      `${previousText ?? ''}\n${output ?? ''}`,
+    );
+    $tw.wiki.setText(
+      stateTiddlerTitle,
+      'type',
+      undefined,
+      'text/vnd.tiddlywiki',
+    );
+  });
 }
