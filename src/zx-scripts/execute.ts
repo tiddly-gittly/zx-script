@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable no-param-reassign */
-export function execute(title: string, fileContent: string, type = 'text/vnd.tiddlywiki', onStart: () => void, onOutput: (output: string) => void) {
+export function execute(title: string, fileContent: string, mimeType = 'text/vnd.tiddlywiki', onStart: () => void, onOutput: (output: string) => void) {
   if (!('observables' in window)) return;
   let fileName = title.replaceAll(/[$/:]/g, '-');
   // add mjs or md to the end
@@ -10,7 +10,7 @@ export function execute(title: string, fileContent: string, type = 'text/vnd.tid
     !fileName.endsWith('.js') &&
     !fileName.endsWith('.md')
   ) {
-    switch (type) {
+    switch (mimeType) {
       // try fit everything that may have ```js block into md
       case 'text/vnd.tiddlywiki':
       case 'text/plain':
@@ -54,10 +54,10 @@ export function executeOnTiddler(title: string, field: string = 'text') {
     return;
   }
   const tiddler = $tw.wiki.getTiddler(title);
-  const type = tiddler?.fields.type || 'text/vnd.tiddlywiki';
+  const mimeType = tiddler?.fields.type || 'text/vnd.tiddlywiki';
   const fileContent = tiddler?.fields[field] as string || '';
   const stateTiddlerTitle = `$:/state/linonetwo/zx-script/output/${title}`;
-  execute(title, fileContent, type, () => {
+  execute(title, fileContent, mimeType, () => {
     $tw.wiki.setText(stateTiddlerTitle, 'text', undefined, '');
   }, output => {
     const previousText = $tw.wiki.getTiddlerText(stateTiddlerTitle);
@@ -76,13 +76,13 @@ export function executeOnTiddler(title: string, field: string = 'text') {
   });
 }
 
-export function executeOnAnyContent(id: string, content: string, contentType: string = 'application/javascript') {
+export function executeOnAnyCode(id: string, code: string, mimeType: string = 'application/javascript') {
   if (!id) {
     return;
   }
   const stateTiddlerTitle = `$:/state/linonetwo/zx-script/output/${id}`;
   const title = `zx-tmp-${id}`;
-  execute(title, content, contentType, () => {
+  execute(title, code, mimeType, () => {
     $tw.wiki.setText(stateTiddlerTitle, 'text', undefined, '');
   }, output => {
     const previousText = $tw.wiki.getTiddlerText(stateTiddlerTitle);

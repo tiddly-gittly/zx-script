@@ -1,18 +1,12 @@
-creator: LinOnetwo
 tags: $:/tags/ViewTemplate
 title: $:/plugins/linonetwo/zx-script/OutputBar
-type: text/vnd.tiddlywiki
 list-before: $:/plugins/linonetwo/inverse-link-and-folder/infobar
 
-<$list filter="[{!!title}addprefix[$:/state/linonetwo/zx-script/output/]is[tiddler]then{!!title}]">
-  <$list filter="[{!!title}addprefix[$:/state/linonetwo/zx-script/output/]]">
+<$let output-title={{{ [{!!title}addprefix[$:/state/linonetwo/zx-script/output/]] }}} >
+  <%if [<output-title>is[tiddler]] %>
     <!-- Space between top level and inner level transclude can't be omit, otherwise generated line will stick together, and destroy the tw render -->
-    <$transclude>
+    <$transclude $tiddler=<<output-title>> />
 
-      <$transclude tiddler="$:/language/MissingTiddler/Hint"/>
-
-    </$transclude>
-
-    <small><$link to=<<currentTiddler>> /></small>
-  </$list>
-</$list>
+    <small><$link to=<<output-title>> /></small>
+  <%endif%>
+</$let>

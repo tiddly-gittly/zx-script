@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unsafe-member-access */
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
-import { executeOnAnyContent, executeOnTiddler } from './execute';
+import { executeOnAnyCode, executeOnTiddler } from './execute';
 
 exports.name = 'zx-message';
 exports.platforms = ['browser', 'node'];
@@ -16,8 +16,8 @@ exports.startup = function() {
       return false;
     }
     const id = event.paramObject?.id as string | undefined;
-    const content = event.paramObject?.content as string | undefined;
-    if (id && content) {
+    const code = event.paramObject?.code as string | undefined;
+    if (id && code) {
       let mimeType = event.paramObject?.mime as string | undefined || 'text/vnd.tiddlywiki';
       // language param take precedence
       const language = event.paramObject?.language as string | undefined;
@@ -45,7 +45,7 @@ exports.startup = function() {
           break;
         }
       }
-      executeOnAnyContent(id, content, mimeType);
+      executeOnAnyCode(id, code, mimeType);
       return false;
     }
     return true;
