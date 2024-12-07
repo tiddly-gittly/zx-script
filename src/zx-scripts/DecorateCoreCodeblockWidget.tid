@@ -2,21 +2,25 @@ title: $:/plugins/linonetwo/zx-script/DecorateCoreCodeblockWidget
 tags: $:/tags/Global/View/Body
 
 \widget $codeblock(code, language)
-<$qualify title=<<storyTiddler>> name="output-id">
-  <$button class="code-block-zx-script-execution-button">
-    {{$:/plugins/linonetwo/zx-script/zx-icon}}ZX
-    <$action-sendmessage $message="tm-zx" code=<<code>> language=<<language>> id=<<output-id>> />
-  </$button>
+<%if markdown md js javascript ts typescript bash zsh shell sh +[match<language>] %>
+  <$set name="output-id" filter="[<code>sha256[]]">
+    <$button class="code-block-zx-script-execution-button">
+      {{$:/plugins/linonetwo/zx-script/zx-icon}}ZX
+      <$action-sendmessage $message="tm-zx" code=<<code>> language=<<language>> id=<<output-id>> />
+    </$button>
+    <$genesis $type="$codeblock" $remappable="no" code=<<code>> language=<<language>> />
+    <!-- Output -->
+    <$let output-title={{{ [<output-id>addprefix[$:/state/linonetwo/zx-script/output/]] }}} >
+      <%if [<output-title>is[tiddler]] %>
+
+        <!-- Similar to $:/plugins/linonetwo/zx-script/OutputBar -->
+        <$transclude $tiddler=<<output-title>> />
+
+        <small><$link to=<<output-title>> /></small>
+      <%endif%>
+    </$let>
+  </$set>
+<%else%>
   <$genesis $type="$codeblock" $remappable="no" code=<<code>> language=<<language>> />
-  <!-- Output -->
-  <$let output-title={{{ [<output-id>addprefix[$:/state/linonetwo/zx-script/output/]] }}} >
-    <%if [<output-title>is[tiddler]] %>
-
-      <!-- Similar to $:/plugins/linonetwo/zx-script/OutputBar -->
-      <$transclude $tiddler=<<output-title>> />
-
-      <small><$link to=<<output-title>> /></small>
-    <%endif%>
-  </$let>
-</$qualify>
+<%endif%>
 \end
