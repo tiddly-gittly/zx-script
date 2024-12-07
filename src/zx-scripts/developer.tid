@@ -7,3 +7,19 @@ title: $:/plugins/linonetwo/zx-script/developer
 We place output of zx to a temporary tiddler, whose name start with "$:/state/linonetwo/zx-script/output/"
 
 And we get the name of this tiddler in wikitext using `[{!!title}addprefix[$:/state/linonetwo/zx-script/output/]`, so it can be transcluded with `{{{ }}}`
+
+!!! Batch execution
+
+You can use message to programmatically execute any code:
+
+```tid
+<$action-sendmessage $message="tm-zx" code=<<code>> language=<<language>> id=<<output-id>> />
+```
+
+The id should be an unique identifier, for example:
+
+```tid
+<$set name="output-id" filter="[<code>sha256[]]">
+```
+
+Read [[$:/plugins/linonetwo/zx-script/DecorateCoreCodeblockWidget]] for how I use it.

@@ -6,17 +6,11 @@ title: $:/plugins/linonetwo/zx-script/readme
 
 This tiddlywiki plugin enables you to run any tiddler with zx.
 
+!! Prerequisit
+
+This plugin requires [[TidGi Desktop App|https://github.com/tiddly-gittly/TidGi-Desktop]] environment to function properly. It will send tiddler content to the `zx` inside TidGi, and prints the output.
+
 !! Basic Usage
-
-!!! Prerequisit
-
-This plugin requires [TidGi](https://github.com/tiddly-gittly/TidGi-Desktop) Desktop App environment to function properly. It will send tiddler content to the `zx` inside TidGi, and prints the output.
-
-!!! Tiddler Type
-
-Tiddler with title extension `*.js *.md *.mjs` can be execute without problem. Other tiddler witout extension (no `.xxx`) will be executed as `*.md` file, for example, tid file without extions will be executed as `*.md`, but it works without problem too, even you are writing wiki text instead of markdown.
-
-If you add filetype `application/javascript` to your tiddler, it will be recognized as `*.mjs`.
 
 !!! Button
 
@@ -24,7 +18,13 @@ A ViewToolbar button is added. You can click on it to execute the script inside 
 
 And the zx output will be printed below your tiddler content.
 
-!!! Demo
+Tiddler with title extension `*.js *.md *.mjs` can be execute without problem. Other tiddler witout extension (no `.xxx`) will be executed as `*.md` file, for example, tid file without extions will be executed as `*.md`, but it works without problem too, even you are writing wiki text instead of markdown.
+
+If you add filetype `application/javascript` to your tiddler, it will be recognized as `*.mjs`.
+
+!!! Codeblock
+
+An execution button is added to the codeblock widget, if language is supported.
 
 ```js
 console.log(`!! Hi!`);
@@ -37,6 +37,8 @@ See [[$:/plugins/linonetwo/zx-script/demo]] for demo of full tiddler execution.
 !!! Execute the code block on the $tw context
 
 You can write some code that is surrounded with `/** tw */` separator. They will be recognized as js code and executed on the context that have access to the $tw api.
+
+See [[$:/plugins/linonetwo/zx-script/demo]] for examples.
 
 Global variables you can use:
 
