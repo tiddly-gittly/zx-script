@@ -40,7 +40,7 @@ jobs:
       - name: Setup NodeJS
         uses: actions/setup-node@v2-beta
         with:
-          node-version: '16'
+          node-version: current
 
       - name: Cache dependencies
         uses: actions/cache@v3
