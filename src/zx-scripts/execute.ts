@@ -1,6 +1,17 @@
 /* eslint-disable @typescript-eslint/prefer-nullish-coalescing */
 /* eslint-disable @typescript-eslint/strict-boolean-expressions */
 /* eslint-disable no-param-reassign */
+
+export function convertShellScriptToZx(fileContent: string): string {
+  const commands = fileContent
+    .split('\n')
+    .map((line: string) => `await $\`${line.trim()}\`;`);
+
+  // TidGi selects pwsh.exe on Windows, but zx also needs its PowerShell quote
+  // function. usePwsh() configures both before the first command is built.
+  return [`if (process.platform === 'win32') usePwsh();`, ...commands].join('\n');
+}
+
 export function execute(title: string, fileContent: string, mimeType = 'text/vnd.tiddlywiki', onStart: () => void, onOutput: (output: string) => void) {
   if (!('observables' in window)) return;
   let fileName = title.replaceAll(/[$/:]/g, '-');
@@ -21,10 +32,7 @@ export function execute(title: string, fileContent: string, mimeType = 'text/vnd
         break;
       }
       case 'text/x-shellscript': {
-        fileContent = fileContent
-          .split('\n')
-          .map((line: string) => `await $\`${line.trim()}\`;`)
-          .join('\n');
+        fileContent = convertShellScriptToZx(fileContent);
         fileName += '.mjs';
         break;
       }
